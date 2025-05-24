@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Modern Blog</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('blog4.jpeg'); /* Replace with your own image URL */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #333;
+    }
+
+    .header {
+      background-color: rgba(98, 0, 234, 0.85);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .nav {
+      display: flex;
+      background-color: #3a3a3a;
+      padding: 10px;
+      justify-content: center;
+    }
+
+    .nav a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+
+    .nav a:hover, .nav .active {
+      background-color: #6200ea;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .top-bar input[type="text"] {
+      padding: 8px;
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .top-bar button {
+      padding: 8px 12px;
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .category-bar {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .category-bar button {
+      margin: 5px;
+      padding: 8px 14px;
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .blog-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .post {
+      background-color: white;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .post:hover {
+      transform: translateY(-5px);
+    }
+
+    .post h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .post p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .category-label {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #6200ea;
+      background-color: #eee;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background-color: rgba(98, 0, 234, 0.85);
+      color: white;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Welcome to My Modern Blog</h1>
+    <p>Read. Learn. Share.</p>
+  </div>
+
+  <div class="nav">
+    <a href="#" class="active">Home</a>
+    <a href="#">Login</a>
+    <a href="#">Register</a>
+    <a href="#">Contact</a>
+  </div>
+
+  <div class="top-bar">
+    <div>
+      <input type="text" id="searchInput" placeholder="Search blog..." onkeyup="searchPosts()">
+      <button onclick="addNewPost()">New Post</button>
+    </div>
+  </div>
+
+  <div class="category-bar">
+    <button onclick="filterPosts('all')">All</button>
+    <button onclick="filterPosts('technology')">Technology</button>
+    <button onclick="filterPosts('sports')">Sports</button>
+    <button onclick="filterPosts('health')">Health</button>
+    <button onclick="filterPosts('education')">Education</button>
+  </div>
+
+  <div class="blog-container" id="blogContainer"></div>
+
+  <div class="footer">
+    <p>&copy; 2025 Your Name. All Rights Reserved.</p>
+    <p>Contact: asishbaro@gmail.com,
+
+ripanjitdas92@gmail.com,
+
+birajdeka@gmail.com</p>
+  </div>
+
+  <script>
+    let posts = JSON.parse(localStorage.getItem('blogPosts')) || [
+      { title: "AI is the Future", body: "Learn about how AI is changing the world.", category: "technology" },
+      { title: "Health & Wellness", body: "Tips for a healthy life: diet, exercise, sleep.", category: "health" },
+      { title: "Cricket World Cup 2025", body: "Exciting highlights from recent matches.", category: "sports" },
+      { title: "Study Smart", body: "Top 5 study techniques every student should know.", category: "education" }
+    ];
+
+    function renderPosts(data) {
+      const container = document.getElementById("blogContainer");
+      container.innerHTML = "";
+      data.forEach(post => {
+        container.innerHTML += `
+          <div class="post">
+            <h3>${post.title}</h3>
+            <p>${post.body}</p>
+            <span class="category-label">${post.category}</span>
+          </div>
+        `;
+      });
+    }
+
+    function filterPosts(category) {
+      if (category === "all") {
+        renderPosts(posts);
+      } else {
+        const filtered = posts.filter(p => p.category === category);
+        renderPosts(filtered);
+      }
+    }
+
+    function searchPosts() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = posts.filter(p =>
+        p.title.toLowerCase().includes(input) || p.body.toLowerCase().includes(input)
+      );
+      renderPosts(filtered);
+    }
+
+    function addNewPost() {
+      const title = prompt("Enter blog title:");
+      const body = prompt("Enter blog content:");
+      const category = prompt("Enter category (technology, sports, health, education):");
+
+      if (title && body && category) {
+        posts.push({ title, body, category });
+        localStorage.setItem("blogPosts", JSON.stringify(posts));
+        renderPosts(posts);
+      }
+    }
+
+    renderPosts(posts);
+  </script>
+
+</body>
+</html>
